@@ -27,7 +27,7 @@ sudo pacman -Syu
 Install pacman packages.
 
 ```bash
-sudo pacman -S zathura zathura-pdf-mupdf calibre nodejs npm nvm neovim yazi ffmpegthumbnailer unarchiver jq poppler fd ripgrep fzf zoxide imagemagick ttf-nerd-fonts-symbols chafa resvg wl-clipboard xclip xsel
+sudo pacman -S zathura zathura-pdf-mupdf calibre nodejs npm nvm neovim yazi ffmpegthumbnailer unarchiver jq poppler fd ripgrep fzf p7zip zoxide imagemagick ttf-nerd-fonts-symbols chafa resvg wl-clipboard xclip xsel
 ```
 
 Install AUR helper (e.g. yay, paru) packages.
