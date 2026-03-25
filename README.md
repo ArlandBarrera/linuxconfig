@@ -6,15 +6,15 @@
 
 ## 🗂️ Packages
 
-- Display Manager: ly.
+- Display Manager: sddm.
 - Desktop Environment/Window Manager: KDE Plasma.
 - File Manager: yazi.
-- Terminal Emulator: Kitty.
-- Shell: Zsh.
-- Browser: Zen Browser.
-- Document Viewer: Zathura.
-- e-book Manager: Calibre.
-- Text Editor: Neovim.
+- Terminal Emulator: kitty.
+- Shell: zsh.
+- Browser: zen browser.
+- Document Viewer: zathura.
+- e-book Manager: calibre.
+- Text Editor: neovim.
 
 ## 📦 Installation
 
@@ -33,7 +33,7 @@ sudo pacman -S zathura zathura-pdf-mupdf calibre nodejs npm nvm neovim yazi ffmp
 Install AUR helper (e.g. yay, paru) packages.
 
 ```bash
-sudo paru -S ly zen-browser-bin
+yay -S zen-browser-bin
 ```
 
 ## ⚙️ Configuration
