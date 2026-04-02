@@ -1,4 +1,4 @@
-# Configuration for Arch Linux
+# Configuration for Linux (Arch)
 
 ## ⚡️ Requirements
 
@@ -24,11 +24,7 @@ Update system.
 sudo pacman -Syu
 ```
 
-Install pacman packages.
-
-```bash
-sudo pacman -S zathura zathura-pdf-mupdf calibre nodejs npm nvm neovim yazi ffmpegthumbnailer unarchiver jq poppler fd ripgrep fzf p7zip zoxide imagemagick ttf-nerd-fonts-symbols chafa resvg wl-clipboard xclip xsel
-```
+Install via script. Run `install.sh`, make sure to change file permissions to allow execute `chmod 744 install.sh`.
 
 Install AUR helper (e.g. yay, paru) packages.
 
@@ -40,4 +36,4 @@ yay -S zen-browser-bin
 
 ### nvim
 
-The neovim config can be found in [nvim](https://github.com/ArlandBarrera/nvim).
+The neovim config can be found in it's dedicated repository [nvim](https://github.com/ArlandBarrera/nvim).
