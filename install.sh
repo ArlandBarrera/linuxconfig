@@ -8,12 +8,20 @@ DOTFILES_DIR=$(pwd)
 
 echo "--- Starting System Configuration ---"
 
-# 1. Essential Packages & Fonts
-echo "Installing base dependencies and Nerd Fonts..."
-# On Arch, ttf-meslo-nerd is in the repos/AUR, but we'll stick to a clean pacman sync for others
-sudo pacman -S --needed zsh fzf git curl unzip zathura yazi kitty --noconfirm
+# 1. Essential & General Use Packages
+echo "Installing base dependencies and tools..."
+# Combined your specific list with the required build tools
+sudo pacman -S --needed \
+    zsh git curl unzip wget \
+    zathura zathura-pdf-mupdf calibre \
+    nodejs npm nvm neovim \
+    yazi ffmpegthumbnailer unarchiver jq poppler fd ripgrep fzf p7zip zoxide \
+    imagemagick ttf-nerd-fonts-symbols chafa resvg \
+    wl-clipboard xclip xsel \
+    --noconfirm
 
-# Check if Meslo is already installed to skip heavy downloads
+# 2. Nerd Fonts (Meslo)
+# Even though ttf-nerd-fonts-symbols is installed, we still sync your preferred Meslo
 if [ ! -d ~/.local/share/fonts/Meslo ]; then
     echo "Downloading Meslo Nerd Font..."
     wget -P /tmp/ https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Meslo.zip
@@ -24,8 +32,8 @@ if [ ! -d ~/.local/share/fonts/Meslo ]; then
     rm -rf /tmp/Meslo*
 fi
 
-# 2. Config Directories (Kitty, Yazi, Zathura)
-echo "Syncing terminal and file manager configs..."
+# 3. Config Directories (Kitty, Yazi, Zathura)
+echo "Syncing application configs..."
 mkdir -p ~/.config
 for app in kitty yazi zathura; do
     if [ -d "./$app" ]; then
@@ -34,18 +42,14 @@ for app in kitty yazi zathura; do
     fi
 done
 
-# 3. Neovim (Inloading)
+# 4. Neovim (Inloading)
 if [ ! -d ~/.config/nvim ]; then
     echo "Cloning Neovim configuration..."
     git clone https://www.github.com/ArlandBarrera/nvim ~/.config/nvim/
-else
-    echo "Nvim config already exists, skipping clone."
 fi
 
-# 4. Zsh & Powerlevel10k Setup
-echo "Configuring Zsh..."
-
-# Install Oh My Zsh if missing
+# 5. Zsh & Powerlevel10k Setup
+echo "Configuring Zsh environment..."
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
@@ -60,6 +64,7 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 # Deploy .zshrc and .p10k.zsh
 cp "$DOTFILES_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
 
+# Create .zshrc with NVM and Zoxide support
 cat <<EOF > ~/.zshrc
 # p10k instant prompt
 if [[ -r "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${USER}.zsh" ]]; then
@@ -68,20 +73,31 @@ fi
 
 export ZSH="\$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git fzf zsh-autosuggestions zsh-syntax-highlighting)
+
+# Added zoxide and nvm to plugins list
+plugins=(git fzf zsh-autosuggestions zsh-syntax-highlighting zoxide)
 
 source \$ZSH/oh-my-zsh.sh
+
+# Load NVM (Installed via pacman)
+export NVM_DIR="\$HOME/.nvm"
+[ -s "/usr/share/nvm/init-nvm.sh" ] && source "/usr/share/nvm/init-nvm.sh"
 
 # fzf Keybindings for <C-t> and <C-r>
 [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 
+# Initialize Zoxide
+eval "\$(zoxide init zsh)"
+
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 EOF
 
-# 5. Finalize
-if [[ "$SHELL" != */zsh ]]; then
-    sudo chsh -s $(which zsh) $USER
+# 6. Finalize Shell Change (Fix for 'Shell not changed' error)
+if [[ "$SHELL" != "/usr/bin/zsh" ]]; then
+    echo "Fixing /etc/shells and applying Zsh..."
+    grep -qxF "/usr/bin/zsh" /etc/shells || echo "/usr/bin/zsh" | sudo tee -a /etc/shells
+    sudo chsh -s /usr/bin/zsh $USER
 fi
 
-echo "--- Setup Complete! Please restart your session. ---"
+echo "--- Setup Complete! Please reboot or log out. ---"
